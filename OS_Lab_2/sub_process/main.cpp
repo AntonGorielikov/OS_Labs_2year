@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <chrono>
 
+#include <Windows.h>
+
 const double EPS_VALUE = 0.01;
 const double X_VALUE = 2;
 const double B_VALUE = 3;
@@ -20,7 +22,15 @@ int main(int argc, char** argv)
     x = X_VALUE;
     b = B_VALUE;
     eps = EPS_VALUE;
-    auto before = std::chrono::high_resolution_clock::now();
+    SYSTEMTIME sys_time;
+    FILETIME temp_ft;
+    ULARGE_INTEGER time_before,
+                   time_after;
+
+    GetSystemTime(&sys_time);
+    SystemTimeToFileTime(&sys_time, &temp_ft);
+    time_before.LowPart = temp_ft.dwLowDateTime;
+    time_before.HighPart = temp_ft.dwHighDateTime;
     while (x <= b)
     {
         result = 0;
@@ -35,6 +45,10 @@ int main(int argc, char** argv)
         std::cout << "log_n(x): " << log_n << "\t" << "teyl.: " << result << std::endl;
         x += 0.1;
     }
-    auto after = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(after - before).count();
+    GetSystemTime(&sys_time);
+    SystemTimeToFileTime(&sys_time, &temp_ft);
+    time_after.LowPart = temp_ft.dwLowDateTime;
+    time_after.HighPart = temp_ft.dwHighDateTime;
+    int time = int(time_after.QuadPart - time_before.QuadPart);
+    return time;
 }
