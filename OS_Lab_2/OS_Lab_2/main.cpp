@@ -67,6 +67,7 @@ int main(int argc, char** argv)
         std::cout << "Process " << i << " : time elapsed - " << time_elapsed / 1e4 << " msec" << std::endl;
     }
 
+    delete[] process_info;
     system("pause");
     return 0;
 }
